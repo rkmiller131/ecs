@@ -1,0 +1,21 @@
+{
+  "name": "ecs",
+  "version": "1.0.0",
+  "description": "An ECS Architecture written for JavaScript, React, Feathers.js, and Three.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ECS",
+    "JavaScript",
+    "React",
+    "Feathers.js",
+    "Three.js",
+    "Engine",
+    "web",
+    "game"
+  ],
+  "author": "Rachel Miller",
+  "license": "ISC"
+}
