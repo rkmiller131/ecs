@@ -2,6 +2,7 @@ import { EntityManager } from "./world/EntityManager";
 
 export interface Entity {
     entityUUID: number
+    alive: boolean
 }
 
 export class Entity {
@@ -10,10 +11,9 @@ export class Entity {
 
     constructor(entityManager) {
       this._entityManager = entityManager || null;
-  
-      // Unique ID for this entity
       this.entityUUID = entityManager._nextEntityId++;
   
       this._components = {};
+      this.alive = true;
     }
 }

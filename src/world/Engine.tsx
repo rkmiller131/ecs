@@ -3,6 +3,7 @@
 // Worlds are responsible for managing the lifecycle of each element or facilitating interactions between them and have
 // methods for creating, removing, and updating all parts of the ecs. In addition, the world is also going to manage a global state/store
 
+import React, { createContext, useContext } from 'react';
 import { EntityManager } from "./EntityManager";
 
 // https://github.com/ecsyjs/ecsy/blob/dev/src
@@ -10,15 +11,20 @@ import { EntityManager } from "./EntityManager";
 
 export interface Engine {
     entityManager: EntityManager
+    scenes: any[] // scene.json files
 }
 
+const EngineContext = createContext(null);
 export class Engine {
     static instance: Engine;
 
     constructor() {
+        if (Engine.instance) return Engine.instance;
         this.entityManager = new EntityManager(this);
         // this.componentsManager = new ComponentManager(this);
         // this.systemManager = new SystemManager(this);
+        this.scenes = []
+        Engine.instance = this;
     }
 
     // api: feathers app/backend to hold reference to all registered services/real time connections for multiple ppl on one instance
@@ -31,3 +37,15 @@ export class Engine {
     // defineState ... we should reference a store similar to hyperflux store
     // defineSystem ...
 }
+
+export const EngineProvider = ({ children }) => {
+    const engineInstance = new Engine();
+
+    return (
+        <EngineContext.Provider value={engineInstance}>
+            {children}
+        </EngineContext.Provider>
+    );
+};
+
+export const useECS = () => useContext(EngineContext);

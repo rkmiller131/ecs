@@ -1,9 +1,19 @@
+import { Entity } from "../Entity";
+import { Engine } from "./Engine";
+
+export interface EntityManager {
+    world: Engine
+}
 export class EntityManager {
+    private _entities: Entity[]
+    private _entitiesToRecycle: Entity[]
+
     constructor(world) {
-        // this.world = world;
+        this.world = world;
         // this.componentsManager = world.componentsManager;
 
-        // this._entities = [];
+        this._entities = [];
+        this._entitiesToRecycle= [];
         // this.nextEntityUUID = 0;
 
         // this._entitiesByName = {}; // name: 123
