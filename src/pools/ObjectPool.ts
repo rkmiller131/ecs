@@ -9,19 +9,31 @@ type Constructor<T> = new (...args: any[]) => T;
 export interface ObjectPool<T> {
     objectClass: Constructor<T>;
     pool: T[];
+    maxSize: number;
 }
 export class ObjectPool<T> {
 
-    constructor(objectClass: Constructor<T>) {
+    // todo: add dynamic size increase/decrease - adjust pool size based on usage patterns or system/hardware resources
+    constructor(objectClass: Constructor<T>, maxSize: number = 300) { // changing the pool size is an opp for performance on lower end devices
         this.objectClass = objectClass;
         this.pool = [];
+        this.maxSize = maxSize
     }
 
     acquire(): T {
-        return this.pool.length > 0 ? this.pool.pop()! : new this.objectClass();
+        if (this.pool.length > 0) return this.pool.pop()!;
+        if (this.pool.length < this.maxSize) {
+            return new this.objectClass();
+        } else {
+            throw new Error('Max object pool size has been reached')
+        }
     }
 
     release(object: T): void {
-        this.pool.push(object);
+        if (this.pool.length < this.maxSize) {
+            this.pool.push(object);
+        } else {
+            throw new Error('Cannot release object to a full object pool');
+        }
     }
 }

@@ -7,13 +7,17 @@ export interface Entity {
 
 export class Entity {
     private _entityManager: EntityManager | null;
-    private _components: any; 
+    private _components: any;
 
     constructor(entityManager) {
       this._entityManager = entityManager || null;
-      this.entityUUID = entityManager._nextEntityId++;
-  
+      this.entityUUID = entityManager._nextEntityUUID++;
+
       this._components = {};
-      this.alive = true;
+      this.alive = false;
     }
+
+    reset(): void {
+      this.alive = false;
+  }
 }
