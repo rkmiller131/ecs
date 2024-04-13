@@ -85,7 +85,7 @@ export class Engine {
     }
 }
 
-export const EngineProvider: React.FC = ({ children }) => {
+export const EngineProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const engineInstance = new Engine();
 
     useEffect(() => {

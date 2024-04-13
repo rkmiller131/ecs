@@ -4,7 +4,7 @@
   "description": "An ECS Architecture written for JavaScript, React, Feathers.js, and Three.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [
     "ECS",
@@ -19,8 +19,20 @@
   "author": "Rachel Miller",
   "license": "ISC",
   "dependencies": {
+    "@types/react": "^18.2.77",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.163.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.24.1",
+    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-react": "^7.24.1",
+    "@testing-library/react": "^15.0.1",
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2"
   }
 }
