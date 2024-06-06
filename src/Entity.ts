@@ -10,7 +10,7 @@ export class Entity {
     private _entityManager: EntityManager;
     private _components: any;
 
-    constructor(entityManager) {
+    constructor(entityManager: EntityManager) {
       this._entityManager = entityManager;
       this.entityUUID = this._entityManager.generateUUID();
 

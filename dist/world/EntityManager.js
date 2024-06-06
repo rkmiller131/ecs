@@ -1,48 +1,32 @@
-import { Entity } from '../Entity';
-import { ObjectPool } from '../utils/ObjectPool';
-import { Engine } from './Engine';
-
-export interface EntityManager {
-    world: Engine
-    pendingDeferredDeletion: boolean
-    activeEntities: Set<Entity>
-    entityPool: ObjectPool<Entity>
-    entitiesToRecycle: Entity[]
-    entitiesByName: Record<string, Entity>
-}
-
-export class EntityManager {
-    private _nextEntityUUID: number;
-
-    constructor(world: Engine) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EntityManager = void 0;
+const Entity_1 = require("../Entity");
+const ObjectPool_1 = require("../utils/ObjectPool");
+class EntityManager {
+    constructor(world) {
         this.world = world;
         // this.componentsManager = this.world.componentsManager;
-
         this.activeEntities = new Set();
-        this.entityPool = new ObjectPool(Entity, this);
+        this.entityPool = new ObjectPool_1.ObjectPool(Entity_1.Entity, this);
         this._nextEntityUUID = 0;
-
         this.entitiesByName = {};
-
         // deferred deletion
-        this.pendingDeferredDeletion = false
+        this.pendingDeferredDeletion = false;
         this.entitiesToRecycle = [];
         // this.entitiesWithComponentsToRemove = [];
     }
-
-    createEntity(): Entity {
+    createEntity() {
         const entity = this.entityPool.acquire();
         entity.reset();
         entity.alive = true;
         this.activeEntities.add(entity);
         return entity;
     }
-
-    getEntityByName(name: string): Entity | undefined {
-        return this.entitiesByName[name]
+    getEntityByName(name) {
+        return this.entitiesByName[name];
     }
-
-    getEntityByUUID(uuid: number): Entity | undefined {
+    getEntityByUUID(uuid) {
         for (const entity of this.activeEntities) {
             if (entity.entityUUID === uuid) {
                 return entity;
@@ -50,21 +34,19 @@ export class EntityManager {
         }
         return undefined;
     }
-
-    generateUUID(): number {
+    generateUUID() {
         this._nextEntityUUID++;
         return this._nextEntityUUID;
     }
-
-    saveNamedEntity(name: string, entity: Entity): void {
+    saveNamedEntity(name, entity) {
         if (this.entitiesByName[name]) {
             console.error(`Entity name '${name}' already exists. Aborting...`);
-        } else {
+        }
+        else {
             this.entitiesByName[name] = entity;
         }
     }
-
-    processDeferredDeletion(): void {
+    processDeferredDeletion() {
         for (const entity of this.entitiesToRecycle) {
             if (entity.alive) {
                 console.warn(`[WARNING] ${entity.entityUUID} is an active entity. This may indicate a logic error. Use "removeEntity(Entity)" to properly recycle this entity.`);
@@ -74,11 +56,11 @@ export class EntityManager {
         this.entitiesToRecycle = [];
         this.pendingDeferredDeletion = false;
     }
-
-    removeEntity(entity: Entity): void {
+    removeEntity(entity) {
         entity.reset();
         this.entitiesToRecycle.push(entity);
         this.activeEntities.delete(entity);
         this.pendingDeferredDeletion = true;
     }
 }
+exports.EntityManager = EntityManager;

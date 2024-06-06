@@ -1,5 +1,3 @@
-import React from 'react';
-import { render } from '@testing-library/react';
 import { Engine } from '../../src/world/Engine';
 
 describe('Engine Instantiation - Unit Tests', () => {
@@ -36,9 +34,5 @@ describe('Engine Instantiation - Unit Tests', () => {
     const clock = engineInstance.clock;
     expect(clock.running).toBeTruthy();
   });
-
-});
-
-describe('Engine Provider - Integration Tests', () => {
 
 });

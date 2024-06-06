@@ -22,7 +22,7 @@ export class ObjectPool<T> {
     }
 
     acquire(): T {
-        if (this.pool.length > 0) return this.pool.shift();
+        if (this.pool.length > 0) return this.pool.shift()!;
         if (this.pool.length < this.maxSize) {
             const obj = new this.objectClass(this.objectManager);
             return obj;
