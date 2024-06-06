@@ -10,30 +10,28 @@ export interface ObjectPool<T> {
     objectClass: Constructor<T>;
     pool: T[];
     maxSize: number;
+    objectManager: any; // maybe make a general manager type like EntityManager or ComponentManager but not as specific
 }
 export class ObjectPool<T> {
-
     // todo: add dynamic size increase/decrease - adjust pool size based on usage patterns or system/hardware resources
-    constructor(objectClass: Constructor<T>, maxSize: number = 300) { // changing the pool size is an opp for performance on lower end devices
+    constructor(objectClass: Constructor<T>, parentManager: any, maxSize: number = 200) { // changing the pool size is an opp for performance on lower end devices
         this.objectClass = objectClass;
         this.pool = [];
         this.maxSize = maxSize
+        this.objectManager = parentManager
     }
 
     acquire(): T {
-        if (this.pool.length > 0) return this.pool.pop()!;
+        if (this.pool.length > 0) return this.pool.shift();
         if (this.pool.length < this.maxSize) {
-            return new this.objectClass();
+            const obj = new this.objectClass(this.objectManager);
+            return obj;
         } else {
             throw new Error('Max object pool size has been reached')
         }
     }
 
     release(object: T): void {
-        if (this.pool.length < this.maxSize) {
-            this.pool.push(object);
-        } else {
-            throw new Error('Cannot release object to a full object pool');
-        }
+        this.pool.push(object);
     }
 }

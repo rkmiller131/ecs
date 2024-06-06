@@ -1,69 +1,84 @@
-import { Entity } from "../Entity";
-import { ObjectPool } from "../pools/ObjectPool";
-import { Engine } from "./Engine";
+import { Entity } from '../Entity';
+import { ObjectPool } from '../pools/ObjectPool';
+import { Engine } from './Engine';
 
 export interface EntityManager {
     world: Engine
     pendingDeferredDeletion: boolean
+    activeEntities: Set<Entity>
+    entityPool: ObjectPool<Entity>
+    entitiesToRecycle: Entity[]
+    entitiesByName: Record<string, Entity>
 }
 
 export class EntityManager {
-    private _entities: Entity[];
-    private _entitiesToRecycle: Entity[];
-    // private _entitiesByName: Record<string, Entity>;
     private _nextEntityUUID: number;
-    private _entityPool: ObjectPool<Entity>;
 
     constructor(world) {
         this.world = world;
-        // this.componentsManager = world.componentsManager;
+        // this.componentsManager = this.world.componentsManager;
 
-        this._entityPool = new ObjectPool(Entity);
-        this._entities = [];
+        this.activeEntities = new Set();
+        this.entityPool = new ObjectPool(Entity, this);
         this._nextEntityUUID = 0;
 
-        // this._entitiesByName = {}; // name: 123
+        this.entitiesByName = {};
 
-        // // deferred deletion
+        // deferred deletion
         this.pendingDeferredDeletion = false
-        this._entitiesToRecycle = [];
+        this.entitiesToRecycle = [];
         // this.entitiesWithComponentsToRemove = [];
     }
 
-    // getEntityByName(name): Entity {
-    //     return this._entitiesByName[name]
-    // }
-
     createEntity(): Entity {
-        const entity = this._entityPool.acquire();
+        const entity = this.entityPool.acquire();
         entity.reset();
         entity.alive = true;
-        this._entities.push(entity);
+        this.activeEntities.add(entity);
         return entity;
     }
 
-    removeEntity(entity: Entity): void {
-        entity.reset();
-        this._entitiesToRecycle.push(entity);
-        this.pendingDeferredDeletion = true;
+    getEntityByName(name): Entity {
+        return this.entitiesByName[name]
     }
 
+    getEntityByUUID(uuid): Entity {
+        for (const entity of this.activeEntities) {
+            if (entity.entityUUID === uuid) {
+                return entity;
+            }
+        }
+        return undefined;
+    }
+
+    generateUUID(): number {
+        this._nextEntityUUID++;
+        return this._nextEntityUUID;
+    }
+
+    saveNamedEntity(name: string, entity: Entity): void {
+        if (this.entitiesByName[name]) {
+            console.error(`Entity name '${name}' already exists. Aborting...`);
+        } else {
+            this.entitiesByName[name] = entity;
+        }
+    }
 
     processDeferredDeletion(): void {
-        for (const entity of this._entitiesToRecycle) {
-            if (entity.alive) console.warn(`[WARNING] ${entity.entityUUID} is an active entity. This may indicate a logic error. Use "removeEntity(entityUUID)" to properly recycle this entity.`)
-            this._entityPool.release(entity);
+        for (const entity of this.entitiesToRecycle) {
+            if (entity.alive) {
+                console.warn(`[WARNING] ${entity.entityUUID} is an active entity. This may indicate a logic error. Use "removeEntity(Entity)" to properly recycle this entity.`);
+            }
+            this.entityPool.release(entity);
         }
-        this._entitiesToRecycle = [];
+        this.entitiesToRecycle = [];
         this.pendingDeferredDeletion = false;
     }
 
-      // when setting a nameComponent, make sure to check:
-        // if (name) {
-        //   if (this._entitiesByNames[name]) {
-        //     console.warn(`Entity name '${name}' already exist`);
-        //   } else {
-        //     this._entitiesByNames[name] = entity;
-        //   }
-        // }
+    removeEntity(entity): void {
+        entity.reset();
+        this.entitiesToRecycle.push(entity);
+        this.activeEntities.delete(entity);
+        this.pendingDeferredDeletion = true;
+    }
 }

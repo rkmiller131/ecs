@@ -1,8 +1,9 @@
+// DEPRECATED, USING PROVIDER PATTERN INSTEAD
+
 import { Entity } from "../Entity";
 import { FrameCallback, useECS } from "../world/Engine";
 
-const engine = useECS();
-
+const { engine } = useECS();
 // ENTITIES --------------------------------------------------------
 
 const useCreateEntity = () => {
@@ -23,7 +24,7 @@ export const removeEntity = (entity: Entity) => {
 
 // ECS FUNCTIONS ----------------------------------------------------
 
-export const execute = (callback: FrameCallback): void => {
+export const execute = (callback): void => {
   engine.start();
   engine.registerFrameCallback(callback);
 }
