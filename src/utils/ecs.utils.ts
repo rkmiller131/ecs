@@ -1,30 +1,32 @@
+// --------------------------------------------------------------------
 // DEPRECATED, USING PROVIDER PATTERN INSTEAD
+// --------------------------------------------------------------------
 
-import { Entity } from "../Entity";
-import { FrameCallback, useECS } from "../world/Engine";
+// import { Entity } from "../Entity";
+// import { FrameCallback, useECS } from "../world/Engine";
 
-const { engine } = useECS();
-// ENTITIES --------------------------------------------------------
+// const { engine } = useECS();
+// // ENTITIES --------------------------------------------------------
 
-const useCreateEntity = () => {
-  return engine.entityManager.createEntity;
-}
+// const useCreateEntity = () => {
+//   return engine.entityManager.createEntity;
+// }
 
-export const createEntity = useCreateEntity();
+// export const createEntity = useCreateEntity();
 
-export const removeEntity = (entity: Entity) => {
-  return engine.entityManager.removeEntity(entity);
-}
+// export const removeEntity = (entity: Entity) => {
+//   return engine.entityManager.removeEntity(entity);
+// }
 
-// COMPONENTS -------------------------------------------------------
+// // COMPONENTS -------------------------------------------------------
 
-// SYSTEMS ----------------------------------------------------------
+// // SYSTEMS ----------------------------------------------------------
 
-// STATES -----------------------------------------------------------
+// // STATES -----------------------------------------------------------
 
-// ECS FUNCTIONS ----------------------------------------------------
+// // ECS FUNCTIONS ----------------------------------------------------
 
-export const execute = (callback): void => {
-  engine.start();
-  engine.registerFrameCallback(callback);
-}
+// export const execute = (callback): void => {
+//   engine.start();
+//   engine.registerFrameCallback(callback);
+// }

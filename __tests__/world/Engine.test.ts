@@ -39,64 +39,6 @@ describe('Engine Instantiation - Unit Tests', () => {
 
 });
 
-// describe('Engine Methods', () => {
-//   test('should register cb in the execute and call the cb every frame', () => {
-//     // const engine = createEngine();
-//     const engine = new Engine();
-//     console.log('engine.instance', )
-//     const mockCallback = jest.fn();
-//     execute(mockCallback);
+describe('Engine Provider - Integration Tests', () => {
 
-//     jest.advanceTimersByTime(100);
-//     jest.advanceTimersByTime(100);
-
-//     expect(mockCallback).toHaveBeenCalledTimes(2);
-//     engine.unregisterFrameCallback(mockCallback);
-//   });
-// });
-
-// describe('EngineProvider', () => {
-//   const engine = new Engine();
-
-//   test('should start the Engine clock when EngineProvider is imported', () => {
-//     const initialClock = engine.clock.getElapsedTime();
-
-//     render(<EngineProvider>Test</EngineProvider>);
-
-  //   setTimeout(() => {
-  //     const updatedClock = engine.clock.getElapsedTime();
-  //     expect(updatedClock).toBeGreaterThan(initialClock);
-  //   }, 500);
-  // });
-
-//   test('should register callbacks in the execute and call the cb every frame', () => {
-//     const executeSpy = jest.spyOn(Engine.prototype, 'execute');
-
-//     const App = () => {
-//       const [frameCount, setFrameCount] = useState(0);
-//       execute(() => {
-//         setFrameCount((prev) => prev + 1);
-//       });
-//       return (
-//         <span>{frameCount}</span>
-//       )
-//     }
-
-//     render(
-//       <EngineProvider>
-//         <App />
-//       </EngineProvider>,
-//       container
-//     );
-
-//     // unmountComponentAtNode(container);
-
-//     expect(engine.execute).toHaveBeenCalled();
-
-//   });
-// });
-
-// you should be able to create multiple entities and see them in the entities array
-// when you remove an entity, it gets pushed into the deferred deletion
-// when you add and remove entities simultaneously, you should expect to see a certain order in the entities pool and other entities should be released into the pool
-// When you create an entity, the entityUUID should increment by 1
+});

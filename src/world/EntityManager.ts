@@ -1,5 +1,5 @@
 import { Entity } from '../Entity';
-import { ObjectPool } from '../pools/ObjectPool';
+import { ObjectPool } from '../utils/ObjectPool';
 import { Engine } from './Engine';
 
 export interface EntityManager {
@@ -38,11 +38,11 @@ export class EntityManager {
         return entity;
     }
 
-    getEntityByName(name): Entity {
+    getEntityByName(name: string): Entity {
         return this.entitiesByName[name]
     }
 
-    getEntityByUUID(uuid): Entity {
+    getEntityByUUID(uuid: number): Entity {
         for (const entity of this.activeEntities) {
             if (entity.entityUUID === uuid) {
                 return entity;
