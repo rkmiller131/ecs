@@ -35,6 +35,16 @@ describe('Entity Manager - Integration Tests', () => {
     expect(entityManager.entitiesByName[name]).toEqual(entity);
   });
 
+  test('should only store unique names for entities', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const entity = entityManager.createEntity();
+    entity.setName('nonUniqueName');
+    const entity2 = entityManager.createEntity();
+    entity2.setName('nonUniqueName');
+    expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Entity name \'nonUniqueName\' already exists. Aborting...'));
+    consoleErrorSpy.mockRestore();
+  });
+
   test('should trigger deferred deletion of entities that are queued for removal', async () => {
     engine.start();
     const entity = entityManager.createEntity();
