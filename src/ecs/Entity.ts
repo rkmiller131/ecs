@@ -1,4 +1,4 @@
-import { EntityManager } from './world/EntityManager';
+import { EntityManager } from '../world/EntityManager';
 
 export interface Entity {
     entityUUID: number
@@ -20,6 +20,7 @@ export class Entity {
 
     reset(): void {
       this.alive = false;
+      this.name = '';
       // there may be some more logic in here in the future
       // such as going through all the components and deleting those
     }

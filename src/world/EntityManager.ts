@@ -1,4 +1,4 @@
-import { Entity } from '../Entity';
+import { Entity } from '../ecs/Entity';
 import { ObjectPool } from '../utils/ObjectPool';
 import { Engine } from './Engine';
 
@@ -76,6 +76,7 @@ export class EntityManager {
     }
 
     removeEntity(entity: Entity): void {
+        entity.name && delete this.entitiesByName[entity.name];
         entity.reset();
         this.entitiesToRecycle.push(entity);
         this.activeEntities.delete(entity);

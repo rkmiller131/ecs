@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef } from 'react';
-import { Entity } from './Entity';
-import { Engine, FrameCallback } from './world/Engine';
+import { Entity } from '../ecs/Entity';
+import { Engine, FrameCallback } from './Engine';
 
 interface EngineContextType {
   engine: Engine;
