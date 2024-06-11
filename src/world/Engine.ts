@@ -1,3 +1,4 @@
+import { HashMap } from '../utils/HashMap';
 import { Clock } from '../utils/Clock';
 import { EntityManager } from './EntityManager';
 
@@ -16,13 +17,14 @@ export type FrameCallback = () => void;
 export interface Engine {
     entityManager: EntityManager
     clock: Clock
+    isRunning: boolean // let's you know if an execute loop has started yet
+    frameCallbacks: HashMap<number, FrameCallback>;
     // scenes: any[] // scene.json files? maybe config files? tbd
 }
 
 export class Engine {
     static instance: Engine;
     private _animationFrameId: number | null;
-    private _frameCallbacks: FrameCallback[];
 
     constructor() {
         if (Engine.instance) return Engine.instance;
@@ -34,7 +36,8 @@ export class Engine {
 
         this.clock = new Clock();
         this._animationFrameId = null; // if you want to cancel animation frame, use this id to clear it. Avoiding memory leaks
-        this._frameCallbacks = []; // every frame, will execute the callbacks provided
+        this.frameCallbacks = new HashMap(); // every frame, will execute the callbacks provided
+        this.isRunning = false; // only starts running when an execute is called.
 
         Engine.instance = this;
     }
@@ -55,7 +58,7 @@ export class Engine {
             if (this.entityManager.pendingDeferredDeletion) this.entityManager.processDeferredDeletion();
 
             // every frame execute callbacks from the client
-            this._frameCallbacks.forEach((callback) => callback());
+            this.frameCallbacks.forEach((callback) => callback());
 
             this._animationFrameId = requestAnimationFrame(tick);
         }
@@ -63,7 +66,10 @@ export class Engine {
     }
 
     start(): void {
-        if (!this._animationFrameId) this.execute();
+        if (!this._animationFrameId) {
+            this.isRunning = true;
+            this.execute();
+        }
     }
 
     stop(): void {
@@ -71,17 +77,11 @@ export class Engine {
             cancelAnimationFrame(this._animationFrameId);
             this._animationFrameId = null;
         }
-        this._frameCallbacks.forEach((cb) => this.unregisterFrameCallback(cb))
+        this.frameCallbacks.clear();
+        this.frameCallbacks = new HashMap();
     }
 
     registerFrameCallback(cb: FrameCallback): void {
-        this._frameCallbacks.push(cb);
-    }
-
-    unregisterFrameCallback(cb: FrameCallback): void {
-        const index = this._frameCallbacks.indexOf(cb);
-        if (index !== -1) {
-            this._frameCallbacks.splice(index, 1);
-        }
+        this.frameCallbacks.register(cb);
     }
 }

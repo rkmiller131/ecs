@@ -36,10 +36,10 @@ export const EngineProvider: React.FC<EngineProviderProps> = ({ children }) => {
   const removeEntity = (entity: Entity) => engineRef.current!.entityManager.removeEntity(entity);
   const getEntityByName = (name: string) => engineRef.current!.entityManager.getEntityByName(name);
   const getEntityByUUID = (uuid: number) => engineRef.current!.entityManager.getEntityByUUID(uuid);
-  const execute = (callback: FrameCallback) => {
-    engineRef.current!.start();
-    engineRef.current!.registerFrameCallback(callback);
-  };
+  const execute = ((callback: FrameCallback) => {
+    if (!engineRef.current.isRunning) engineRef.current!.start(); // the running property might not be necessary since it already checks for anim frame id
+    engineRef.current.registerFrameCallback(callback);
+  });
 
   return (
     <EngineContext.Provider

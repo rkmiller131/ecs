@@ -1,7 +1,12 @@
 import { Clock } from '../src/utils/Clock'
 
+interface ExtendedDate extends Date {
+  [key: string]: any;
+  [key: symbol]: any;
+}
+
 describe('Clock Utility - Unit Tests', () => {
-  let clock;
+  let clock: Clock;
 
   beforeEach(() => {
     clock = new Clock();
@@ -18,7 +23,7 @@ describe('Clock Utility - Unit Tests', () => {
     clock.start();
 
     // A mock Date object that overrides the now method
-    const mockDate = new Proxy(new Date(), {
+    const mockDate = new Proxy(new Date() as ExtendedDate, {
       get(target, prop) {
         if (prop === 'now') {
           return jest.fn(() => 1717689207838);

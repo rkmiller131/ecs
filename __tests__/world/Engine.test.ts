@@ -1,7 +1,7 @@
 import { Engine } from '../../src/world/Engine';
 
 describe('Engine Instantiation - Unit Tests', () => {
-  let engineInstance;
+  let engineInstance: Engine;
 
   beforeEach(() => {
     engineInstance = new Engine();

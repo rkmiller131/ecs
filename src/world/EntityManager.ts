@@ -15,7 +15,7 @@ export class EntityManager {
     private _nextEntityUUID: number;
 
     constructor(world: Engine) {
-        this.world = world;
+        this.world = world; // might not need a reference to the world, only if we need to access component manager in here
         // this.componentsManager = this.world.componentsManager;
 
         this.activeEntities = new Set();

@@ -1,5 +1,6 @@
 import { EntityManager } from '../../src/world/EntityManager';
 import { Engine } from '../../src/world/Engine';
+import { Entity } from '../../src/ecs/Entity';
 
 describe('Entity Manager - Integration Tests', () => {
   let entityManager: EntityManager;
@@ -12,7 +13,7 @@ describe('Entity Manager - Integration Tests', () => {
 
   test('should be able to create multiple entities with chronological UUIDs, all currently active in the world', () => {
     const numberOfEntities = 5;
-    const entitiesCreated = [];
+    const entitiesCreated = [] as Entity[];
 
     for (let i = 0; i < numberOfEntities; i++) {
       const entity = entityManager.createEntity();
@@ -22,7 +23,7 @@ describe('Entity Manager - Integration Tests', () => {
     for (let j = 0; j < entitiesCreated.length; j++) {
       // entities created with chronological entityUUIDs
       expect(entitiesCreated[j].entityUUID).toBe(j + 1);
-      const currentEntity = entityManager.getEntityByUUID(entitiesCreated[j].entityUUID)
+      const currentEntity = entityManager.getEntityByUUID(entitiesCreated[j].entityUUID)!;
       expect(entityManager.activeEntities.has(currentEntity)).toBeTruthy();
     };
   });

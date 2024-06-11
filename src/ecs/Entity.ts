@@ -26,6 +26,14 @@ export class Entity {
     }
 
     setName(name: string): void {
+      if (this.name && this.name !== name) {
+        throw new Error(`The entity named "${this.name}" cannot be reassigned to "${name}"`);
+      }
+      for (const entity of this._entityManager.activeEntities) {
+        if (entity.name === name) {
+          throw new Error(`Entity with the name of "${name}" already exists in the world. This could indicate a logic error if React's re-renders cause entity.setName to execute more times than intended. Entities should be saved as a ref.`);
+        }
+      }
       this.name = name;
       this._entityManager.saveNamedEntity(name, this);
     }
